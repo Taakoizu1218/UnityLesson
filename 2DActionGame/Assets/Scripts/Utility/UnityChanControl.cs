@@ -10,6 +10,8 @@ public class UnityChanControl : MonoBehaviour
     [SerializeField] float JumpPower = 10.0f;
     [SerializeField] float MaxSpeed = 3.0f;
 
+    Animator animator = null;
+
     Vector3 Startpos;
     float gravity;
     bool LiftFlg = false;
@@ -19,6 +21,7 @@ public class UnityChanControl : MonoBehaviour
         rigidbody = GetComponent<Rigidbody2D>();
         gravity = rigidbody.gravityScale;
         Startpos = gameObject.transform.position;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -51,14 +54,23 @@ public class UnityChanControl : MonoBehaviour
             rigidbody.MovePosition(rigidbody.position + new Vector2(0.0f, -0.1f));
         }
 
-        //if (Mathf.Abs(rigidbody.velocity.x) > MaxSpeed)
-        //{
 
-        //    var Velocity = rigidbody.velocity;
-        //    Velocity.x = MaxSpeed * key;
-        //    rigidbody.velocity = Velocity;
-        //}
+        var VelocityX = Mathf.Abs(rigidbody.velocity.x);
+        if (VelocityX > MaxSpeed)
+        {
 
+            var Velocity = rigidbody.velocity;
+            Velocity.x = MaxSpeed * key;
+            rigidbody.velocity = Velocity;
+        }
+        if (key != 0)
+        {
+            var scale = transform.localScale;
+            scale.x = key;
+            transform.localScale = scale;
+        }
+
+        animator.speed = VelocityX / MaxSpeed;
     }
     public void GameOver()
     {
